@@ -396,6 +396,16 @@
   flex-shrink: 0;
 }
 
+.cover-button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: zoom-in;
+  display: block;
+}
+
 .book-cover img {
   width: 100%;
   height: 100%;
@@ -502,6 +512,49 @@
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--ink-500);
+}
+
+.cover-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 14, 22, 0.72);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 40;
+}
+
+.cover-lightbox-inner {
+  position: relative;
+  max-width: min(720px, 90vw);
+  max-height: min(80vh, 820px);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #0f121a;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+}
+
+.cover-lightbox-inner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #0f121a;
+}
+
+.cover-lightbox-close {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(15, 18, 26, 0.85);
+  color: #fff;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
 @media (max-width: 980px) {

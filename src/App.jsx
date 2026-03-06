@@ -32,6 +32,7 @@ function App() {
   const [form, setForm] = useState(emptyForm)
   const [view, setView] = useState('list')
   const [editingId, setEditingId] = useState(null)
+  const [coverPreview, setCoverPreview] = useState(null)
   const [adminToken, setAdminToken] = useState(
     () => localStorage.getItem('adminToken') || ''
   )
@@ -79,6 +80,19 @@ function App() {
       clearTimeout(timer)
     }
   }, [filter, query])
+
+  useEffect(() => {
+    if (!coverPreview) return
+    const handleKey = (event) => {
+      if (event.key === 'Escape') {
+        setCoverPreview(null)
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => {
+      window.removeEventListener('keydown', handleKey)
+    }
+  }, [coverPreview])
 
   const metrics = useMemo(() => {
     const safeBooks = Array.isArray(books) ? books : []
@@ -286,6 +300,14 @@ function App() {
     setEditingId(null)
     setForm(emptyForm)
     setView('list')
+  }
+
+  const openCoverPreview = (book) => {
+    if (!book?.cover) return
+    setCoverPreview({
+      src: book.cover,
+      title: book.title || '表紙',
+    })
   }
 
   const renderStars = (rating) => {
@@ -504,7 +526,14 @@ function App() {
                 <article key={book.id} className="book-card">
                   <div className="book-cover">
                     {book.cover ? (
-                      <img src={book.cover} alt={`${book.title} 表紙`} loading="lazy" />
+                      <button
+                        type="button"
+                        className="cover-button"
+                        onClick={() => openCoverPreview(book)}
+                        aria-label={`${book.title} 表紙を拡大表示`}
+                      >
+                        <img src={book.cover} alt={`${book.title} 表紙`} loading="lazy" />
+                      </button>
                     ) : (
                       <div className="cover-placeholder">NO COVER</div>
                     )}
@@ -608,6 +637,30 @@ function App() {
         </div>
         <span>Library Desk v1.0</span>
       </footer>
+
+      {coverPreview && (
+        <div
+          className="cover-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${coverPreview.title} 表紙拡大`}
+          onClick={() => setCoverPreview(null)}
+        >
+          <div
+            className="cover-lightbox-inner"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <img src={coverPreview.src} alt={`${coverPreview.title} 表紙`} />
+            <button
+              type="button"
+              className="cover-lightbox-close"
+              onClick={() => setCoverPreview(null)}
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
